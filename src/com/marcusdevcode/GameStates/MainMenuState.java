@@ -1,9 +1,6 @@
 package src.com.marcusdevcode.GameStates;
-import src.com.marcusdevcode.GameState;
-import src.com.marcusdevcode.SoundHendeler;
+import src.com.marcusdevcode.*;
 import src.com.marcusdevcode.UI.GMenuItem;
-import src.com.marcusdevcode.IGameState;
-import src.com.marcusdevcode.Main;
 import src.com.marcusdevcode.UI.SubWindow;
 import src.com.marcusdevcode.eventListeners.MouseEventCallback;
 import src.com.marcusdevcode.resources.ResourceLoader;
@@ -13,23 +10,23 @@ import java.util.ArrayList;
 
 public class MainMenuState extends Canvas implements IGameState {
     private final ArrayList<GMenuItem> menuItems = new ArrayList<GMenuItem>();
-    private final SoundHendeler backgroundSound;
+    private SoundHendeler backgroundSound;
     Main game;
     Image background;
     SubWindow subWindow;
     ArrayList<GMenuItem>items  = new ArrayList<GMenuItem>();
     public MainMenuState(Main Game) {
         game = Game;
-        this.backgroundSound = new SoundHendeler("resources/audio/main-menu.wav");
         subWindow = new SubWindow("Main menu",Game, "center");
-        GMenuItem PlayItem = new GMenuItem(Game,"Play",new Dimension(365,70),new Point(250,150));
+        subWindow.loadResources();
+        GMenuItem PlayItem = new GMenuItem(Game,"Play",new Point(subWindow.size.width/2,150));
         PlayItem.onClick(new MouseEventCallback(){
             @Override
             public void onEvent(MouseEvent e) {
                 game.change_state(GameState.IN_GAME);
             }
         });
-        GMenuItem ExitItem = new GMenuItem(Game,"Exit",new Dimension(365,70),new Point(250,250));
+        GMenuItem ExitItem = new GMenuItem(Game,"Exit",new Point(subWindow.size.width/2,250));
         ExitItem.onClick(new MouseEventCallback(){
             @Override
             public void onEvent(MouseEvent e) {
@@ -39,10 +36,10 @@ public class MainMenuState extends Canvas implements IGameState {
         this.menuItems.add(PlayItem);
         this.menuItems.add(ExitItem);
         for (int i = 0; i < this.menuItems.size(); i++) {
-            subWindow.addButton(this.menuItems.get(i));
+            GMenuItem gMenuItem = this.menuItems.get(i);
+            gMenuItem.loadResources();
+            subWindow.addButton(gMenuItem);
         }
-//        subWindow.addButton(new src.com.MarcusDevCode.UI.GMenuItem(Game,"TEst",new Dimension(365,70),new Point(250,150)));
-        background = ResourceLoader.getInstance().getBufferedImage("resources/images/sky.png");
     }
 
     @Override
@@ -70,5 +67,11 @@ public class MainMenuState extends Canvas implements IGameState {
             backgroundSound.play();
         }
         subWindow.register_events();
+    }
+
+    @Override
+    public void loadResources() {
+        backgroundSound = new SoundHendeler("resources/audio/main-menu.wav");
+        background      = ResourceLoader.getInstance().getBufferedImage("resources/images/sky.png");
     }
 }

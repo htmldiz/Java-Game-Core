@@ -3,15 +3,18 @@ package src.com.marcusdevcode.UI;
 import src.com.marcusdevcode.Helpers;
 import src.com.marcusdevcode.IGameState;
 import src.com.marcusdevcode.Main;
+import src.com.marcusdevcode.resources.ObjectResources;
 import src.com.marcusdevcode.resources.ResourceLoader;
 
 import java.awt.*;
 import java.util.ArrayList;
 
-public class SubWindow implements IGameState {
+public class SubWindow implements ObjectResources, IGameState {
+    private String Slocation;
     Main game;
     Image background;
     String label;
+    public Dimension size = new Dimension(0,0);
     int width;
     int height;
     int labelSize = 12;
@@ -27,20 +30,14 @@ public class SubWindow implements IGameState {
     public SubWindow(String label,Main game, String location) {
         this.label = label;
         this.game = game;
-        this.loadImage();
-        this.loadFont();
-        this.Initlocation(location);
+        this.Slocation = location;
     }
 
     public void Initlocation(String location) {
         if("center".equals(location)) {
-            Helpers.getItemLocation(this.location.x,this.location.y);
+            this.location.x = size.width/2;
+            this.location.y = size.height/2;
         }
-    }
-    public void loadImage() {
-        background = ResourceLoader.getInstance().getBufferedImage("resources/images/Window04.png");
-        width      = background.getWidth(null);
-        height     = background.getHeight(null);
     }
     @Override
     public void tick() {
@@ -50,7 +47,7 @@ public class SubWindow implements IGameState {
     }
     @Override
     public void render(Graphics2D g) {
-        g.drawImage(background,this.location.x,this.location.y,width,height,null);
+        g.drawImage(background,this.location.x,this.location.y,size.width,size.height,null);
         drawLabel(g, label);
         for (int i = 0; i < items.size(); i++) {
             items.get(i).render(g);
@@ -61,12 +58,6 @@ public class SubWindow implements IGameState {
     public void dispose_events() {
         for (int i = 0; i < items.size(); i++) {
             items.get(i).dispose_events();
-        }
-    }
-    private void loadFont() {
-        if(this.labelFontText == null){
-            Font customFont = ResourceLoader.getInstance().getFont("resources/fonts/cyberpunk.otf",Font.TRUETYPE_FONT);
-            this.labelFontText = customFont.deriveFont(Font.PLAIN, labelSize);
         }
     }
     private void drawLabel(Graphics2D g, String text) {
@@ -88,5 +79,15 @@ public class SubWindow implements IGameState {
         this.items.add(Item);
         Point ItemLocation = Item.location.getLocation();
         Item.location = new Point(this.location.x + ItemLocation.x,this.location.y + ItemLocation.y);
+    }
+
+    @Override
+    public void loadResources() {
+        background = ResourceLoader.getInstance().getBufferedImage("resources/images/Window04.png");
+        size.width      = background.getWidth(null);
+        size.height     = background.getHeight(null);
+        Font customFont = ResourceLoader.getInstance().getFont("resources/fonts/cyberpunk.otf",Font.TRUETYPE_FONT);
+        this.labelFontText = customFont.deriveFont(Font.PLAIN, labelSize);
+        this.Initlocation(Slocation);
     }
 }

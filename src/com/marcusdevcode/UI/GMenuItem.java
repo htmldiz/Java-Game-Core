@@ -5,6 +5,7 @@ import src.com.marcusdevcode.Main;
 import src.com.marcusdevcode.MouseEventHandlers;
 import src.com.marcusdevcode.SoundHendeler;
 import src.com.marcusdevcode.eventListeners.*;
+import src.com.marcusdevcode.resources.ObjectResources;
 import src.com.marcusdevcode.resources.ResourceLoader;
 
 import java.awt.*;
@@ -12,7 +13,7 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
-public class GMenuItem implements GameListenerMouseClicked, GameListenerMouseEntered, GameListenerMouseExited, GameObjectListenerMouseMoved {
+public class GMenuItem implements GameListenerMouseClicked, ObjectResources, GameListenerMouseEntered, GameListenerMouseExited, GameObjectListenerMouseMoved {
     String name = "src.com.MarcusDevCode.UI.GMenuItem";
     private Main Game;
     String label = "";
@@ -29,22 +30,19 @@ public class GMenuItem implements GameListenerMouseClicked, GameListenerMouseEnt
     public static final int HOVERED = 1;
     public int current_state = DEFAULT;
     private MouseEventCallback mouseClickedHendeler;
-
     public GMenuItem(Main Game,String label, Dimension size, Point location) {
         this.Game     = Game;
         this.label    = label;
         this.size     = size;
         this.name     = label;
         this.location = location;
-        Font customFont = ResourceLoader.getInstance().getFont("resources/fonts/cyberpunk.otf",Font.TRUETYPE_FONT);
-        this.hoverSound = new SoundHendeler("resources/audio/hovering.wav");
-        this.clickSound = new SoundHendeler("resources/audio/click.wav");
-        this.labelFontText = customFont.deriveFont(Font.PLAIN, labelSize);
-        loadImages();
     }
-    public void loadImages(){
-        Images.put(DEFAULT,ResourceLoader.getInstance().getBufferedImage("resources/images/Btn_V08.png"));
-        Images.put(HOVERED,ResourceLoader.getInstance().getBufferedImage("resources/images/Btn_V11.png"));
+
+    public GMenuItem(Main game, String label, Point location) {
+        this.Game     = game;
+        this.label    = label;
+        this.name     = label;
+        this.location = location;
     }
 
     public boolean inBounds(){
@@ -144,5 +142,21 @@ public class GMenuItem implements GameListenerMouseClicked, GameListenerMouseEnt
     @Override
     public void mouseMoved(MouseEvent e) {
         System.out.println("Exited");
+    }
+
+    @Override
+    public void loadResources() {
+        Font customFont    = ResourceLoader.getInstance().getFont("resources/fonts/cyberpunk.otf",Font.TRUETYPE_FONT);
+        this.labelFontText = customFont.deriveFont(Font.PLAIN, labelSize);
+        this.hoverSound    = new SoundHendeler("resources/audio/hovering.wav");
+        this.clickSound    = new SoundHendeler("resources/audio/click.wav");
+        BufferedImage DEFAULTImage = ResourceLoader.getInstance().getBufferedImage("resources/images/Btn_V16.png");
+        BufferedImage HOVEREDImage = ResourceLoader.getInstance().getBufferedImage("resources/images/Btn_V15.png");
+        this.location.x = this.location.x-DEFAULTImage.getWidth()/2;
+        if(this.size == null){
+            this.size = new Dimension(DEFAULTImage.getWidth(),DEFAULTImage.getHeight());
+        }
+        Images.put(DEFAULT,DEFAULTImage);
+        Images.put(HOVERED,HOVEREDImage);
     }
 }

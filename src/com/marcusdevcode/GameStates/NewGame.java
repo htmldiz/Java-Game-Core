@@ -19,8 +19,6 @@ public class NewGame extends Canvas implements IGameState {
     public int height;
     public NewGame(Main Game){
         game = Game;
-        loadImage();
-        background = ResourceLoader.getInstance().getBufferedImage("resources/images/sky.png");
     }
     @Override
     public void tick() {}
@@ -35,7 +33,9 @@ public class NewGame extends Canvas implements IGameState {
 
     @Override
     public void register_events() {}
-    public void loadImage() {
+
+    @Override
+    public void loadResources() {
         background = ResourceLoader.getInstance().getBufferedImage("resources/images/sky.png");
         width      = background.getWidth(null);
         height     = background.getHeight(null);

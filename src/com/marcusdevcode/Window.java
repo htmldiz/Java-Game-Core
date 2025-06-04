@@ -41,9 +41,9 @@ public class Window extends Canvas{
         frame.setUndecorated(true);
         frame.requestFocusInWindow();
         frame.setFocusable(true);
-        frame.setSize((int)gdm.getDisplayMode().getWidth()/2, (int)gdm.getDisplayMode().getHeight()/2);
+        frame.setSize((int)gdm.getDisplayMode().getWidth(), (int)gdm.getDisplayMode().getHeight()-40);
         frame.setLocationRelativeTo(null);
-        gdm.getScreen().setFullScreenWindow(frame);
+//        gdm.getScreen().setFullScreenWindow(frame);
         if(game != null) {
             frame.getContentPane().add(game);
         }
