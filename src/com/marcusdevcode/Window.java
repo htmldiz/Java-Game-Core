@@ -18,7 +18,6 @@ public class Window extends Canvas{
         return frame.getLocationOnScreen();
     }
     public void startGame(){
-        TinySound.init();
         if(game != null) {
             game.start();
         }

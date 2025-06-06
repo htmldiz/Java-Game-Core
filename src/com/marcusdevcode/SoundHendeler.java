@@ -1,5 +1,6 @@
 package src.com.marcusdevcode;
 
+import src.com.marcusdevcode.tinysound.Music;
 import src.com.marcusdevcode.tinysound.Sound;
 import src.com.marcusdevcode.tinysound.TinySound;
 
@@ -10,13 +11,31 @@ public class SoundHendeler {
     public AudioInputStream inputStream;
     public FloatControl volumeControl;
     public Sound sound;
-    public SoundHendeler(String path) {
-        sound = TinySound.loadSound(this.getClass().getClassLoader().getResource(path));
+    public Music music;
+    public String type;
+    public SoundHendeler(String path,String type) {
+        this.type = type;
+        if(type == "sound") {
+            sound = TinySound.loadSound(this.getClass().getClassLoader().getResource(path));
+        }
+        if(type == "music") {
+            music = TinySound.loadMusic(this.getClass().getClassLoader().getResource(path));
+        }
     }
-    public void play(){
-        sound.play();
+    public void play(boolean loop){
+        if(type == "sound") {
+            sound.play();
+        }
+        if(type == "music") {
+            music.play(loop);
+        }
     }
     public void stop(){
-        sound.stop();
+        if(type == "sound") {
+            sound.stop();
+        }
+        if(type == "music") {
+            music.stop();
+        }
     }
 }

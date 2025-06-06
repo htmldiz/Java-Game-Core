@@ -15,13 +15,6 @@ public class Main extends Canvas implements Runnable{
     private double width;
     private double height;
     public GraphicsDevice gd;
-    int R = 255;
-    boolean Rd = false;
-    Point mousePosition = new Point();
-    int G = 255;
-    boolean Gd = false;
-    int B = 255;
-    boolean Bd = false;
     private int currentStateID;
     private StateLoader currentStateObj;
     private ArrayList<StateLoader> StateStack = new ArrayList<StateLoader>();
@@ -41,7 +34,11 @@ public class Main extends Canvas implements Runnable{
         addKeyListener(new KeyAdapter() {
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                    change_state(GameState.MAIN_MENU);
+                    if(currentStateID != GameState.MAIN_MENU) {
+                        change_state(GameState.MAIN_MENU);
+                    }else{
+                        closeGame();
+                    }
                 }
             }
         });

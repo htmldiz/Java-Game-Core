@@ -10,12 +10,11 @@ public class StateLoader {
         setStateID(StateID);
         if(getStateID() == GameState.MAIN_MENU){
             state = new MainMenuState(game);
-            state.loadResources();
         }
         if(getStateID() == GameState.IN_GAME){
             state = new NewGame(game);
-            state.loadResources();
         }
+        state.loadResources();
     }
 
     public int getStateID() {

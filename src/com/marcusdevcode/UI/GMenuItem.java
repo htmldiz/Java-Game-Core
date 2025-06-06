@@ -54,24 +54,24 @@ public class GMenuItem implements GameListenerMouseClicked, ObjectResources, Gam
                 mousePosition.y >= this.location.y &&
                 mousePosition.y <= this.location.y + Image.getHeight(null)
         ){
-            if(this.hoverSoundPlayed == false) {
-                if(this.hoverSound != null) {
-                    this.hoverSound.play();
-                    this.hoverSoundPlayed = true;
-                }
-            }
             return true;
-        }
-        if(this.hoverSoundPlayed == true) {
-            this.hoverSoundPlayed = false;
-            this.hoverSound.stop();
         }
         return false;
     }
     public void tick() {
         if(inBounds()){
+            if(this.hoverSoundPlayed == false) {
+                if(this.hoverSound != null) {
+                    this.hoverSound.play(false);
+                    this.hoverSoundPlayed = true;
+                }
+            }
             this.current_state = GMenuItem.HOVERED;
         }else{
+            if(this.hoverSoundPlayed == true) {
+                this.hoverSoundPlayed = false;
+                this.hoverSound.stop();
+            }
             this.current_state = GMenuItem.DEFAULT;
         }
     }
@@ -119,7 +119,7 @@ public class GMenuItem implements GameListenerMouseClicked, ObjectResources, Gam
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        clickSound.play();
+        clickSound.play(false);
         if(mouseClickedHendeler != null){
             mouseClickedHendeler.onEvent(e);
         }
@@ -148,8 +148,8 @@ public class GMenuItem implements GameListenerMouseClicked, ObjectResources, Gam
     public void loadResources() {
         Font customFont    = ResourceLoader.getInstance().getFont("resources/fonts/cyberpunk.otf",Font.TRUETYPE_FONT);
         this.labelFontText = customFont.deriveFont(Font.PLAIN, labelSize);
-        this.hoverSound    = new SoundHendeler("resources/audio/hovering.wav");
-        this.clickSound    = new SoundHendeler("resources/audio/click.wav");
+        this.hoverSound    = new SoundHendeler("resources/audio/hovering.wav","sound");
+        this.clickSound    = new SoundHendeler("resources/audio/click.wav","sound");
         BufferedImage DEFAULTImage = ResourceLoader.getInstance().getBufferedImage("resources/images/Btn_V16.png");
         BufferedImage HOVEREDImage = ResourceLoader.getInstance().getBufferedImage("resources/images/Btn_V15.png");
         this.location.x = this.location.x-DEFAULTImage.getWidth()/2;
