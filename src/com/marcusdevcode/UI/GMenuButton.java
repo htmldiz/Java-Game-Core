@@ -13,24 +13,30 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
-public class GMenuItem implements GameListenerMouseClicked, ObjectResources, GameListenerMouseEntered, GameListenerMouseExited, GameObjectListenerMouseMoved {
-    String name = "src.com.MarcusDevCode.UI.GMenuItem";
+public class GMenuButton implements GameListenerMouseClicked, ObjectResources, GameListenerMouseEntered, GameListenerMouseExited, GameObjectListenerMouseMoved {
+    String name = "src.com.marcusdevcode.UI.GMenuButton";
     private Main Game;
-    String label = "";
-    int labelSize = 18;
-    String eventsId;
-    Font labelFontText;
-    SoundHendeler hoverSound;
-    SoundHendeler clickSound;
+    public String label = "";
+    public int labelSize = 18;
+    public String eventsId;
+    public Font labelFontText;
+    public SoundHendeler hoverSound;
+    public String DefaultImagePath = "resources/images/Btn_V16.png";
+    public String HoveredImagePath = "resources/images/Btn_V15.png";
+    public String hoverSoundPath = "resources/audio/hovering.wav";
+    public String clickSoundPath = "resources/audio/click.wav";
+    public SoundHendeler clickSound;
     boolean hoverSoundPlayed = false;
-    Dimension size = new Dimension(0,0);
-    Point location = new Point(0,0);
+    public Dimension size = new Dimension(0,0);
+    public Point location = new Point(0,0);
     HashMap<Integer, BufferedImage> Images = new HashMap<Integer, BufferedImage>();
     public static final int DEFAULT = 0;
     public static final int HOVERED = 1;
     public int current_state = DEFAULT;
+    public BufferedImage DefaultImage;
+    public BufferedImage HoveredImage;
     private MouseEventCallback mouseClickedHendeler;
-    public GMenuItem(Main Game,String label, Dimension size, Point location) {
+    public GMenuButton(Main Game, String label, Dimension size, Point location) {
         this.Game     = Game;
         this.label    = label;
         this.size     = size;
@@ -38,7 +44,7 @@ public class GMenuItem implements GameListenerMouseClicked, ObjectResources, Gam
         this.location = location;
     }
 
-    public GMenuItem(Main game, String label, Point location) {
+    public GMenuButton(Main game, String label, Point location) {
         this.Game     = game;
         this.label    = label;
         this.name     = label;
@@ -60,19 +66,23 @@ public class GMenuItem implements GameListenerMouseClicked, ObjectResources, Gam
     }
     public void tick() {
         if(inBounds()){
-            if(this.hoverSoundPlayed == false) {
-                if(this.hoverSound != null) {
+            if(this.hoverSound != null) {
+                if(this.hoverSoundPlayed == false) {
                     this.hoverSound.play(false);
                     this.hoverSoundPlayed = true;
                 }
             }
-            this.current_state = GMenuItem.HOVERED;
+            this.current_state = GMenuButton.HOVERED;
         }else{
-            if(this.hoverSoundPlayed == true) {
-                this.hoverSoundPlayed = false;
-                this.hoverSound.stop();
+            if(this.hoverSound != null) {
+                if(this.hoverSoundPlayed == true) {
+                    this.hoverSoundPlayed = false;
+                    this.hoverSound.stop();
+                }
             }
-            this.current_state = GMenuItem.DEFAULT;
+            if(HoveredImage != null){
+                this.current_state = GMenuButton.DEFAULT;
+            }
         }
     }
     public Image getCurrentStateImage() {
@@ -85,7 +95,7 @@ public class GMenuItem implements GameListenerMouseClicked, ObjectResources, Gam
         drawLabel(g,label);
     }
 
-    private void drawLabel(Graphics2D g, String text) {
+    public void drawLabel(Graphics2D g, String text) {
         g.setFont(labelFontText);
         FontMetrics metrics = g.getFontMetrics();
         int stringWidth     = metrics.stringWidth(text) / 2;
@@ -148,15 +158,21 @@ public class GMenuItem implements GameListenerMouseClicked, ObjectResources, Gam
     public void loadResources() {
         Font customFont    = ResourceLoader.getInstance().getFont("resources/fonts/cyberpunk.otf",Font.TRUETYPE_FONT);
         this.labelFontText = customFont.deriveFont(Font.PLAIN, labelSize);
-        this.hoverSound    = new SoundHendeler("resources/audio/hovering.wav","sound");
-        this.clickSound    = new SoundHendeler("resources/audio/click.wav","sound");
-        BufferedImage DEFAULTImage = ResourceLoader.getInstance().getBufferedImage("resources/images/Btn_V16.png");
-        BufferedImage HOVEREDImage = ResourceLoader.getInstance().getBufferedImage("resources/images/Btn_V15.png");
-        this.location.x = this.location.x-DEFAULTImage.getWidth()/2;
-        if(this.size == null){
-            this.size = new Dimension(DEFAULTImage.getWidth(),DEFAULTImage.getHeight());
+        if(hoverSoundPath != null) {
+            this.hoverSound = new SoundHendeler(hoverSoundPath, "sound");
         }
-        Images.put(DEFAULT,DEFAULTImage);
-        Images.put(HOVERED,HOVEREDImage);
+        if(clickSoundPath != null) {
+            this.clickSound = new SoundHendeler(clickSoundPath, "sound");
+        }
+        DefaultImage = ResourceLoader.getInstance().getBufferedImage(DefaultImagePath);
+        if(HoveredImagePath != null) {
+            HoveredImage = ResourceLoader.getInstance().getBufferedImage(HoveredImagePath);
+            Images.put(HOVERED,HoveredImage);
+        }
+        this.location.x = this.location.x-DefaultImage.getWidth()/2;
+        if(this.size == null){
+            this.size = new Dimension(DefaultImage.getWidth(),DefaultImage.getHeight());
+        }
+        Images.put(DEFAULT,DefaultImage);
     }
 }

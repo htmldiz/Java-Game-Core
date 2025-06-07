@@ -11,11 +11,15 @@ public class Window extends Canvas{
     Main game;
     public static Window instance;
     public GraphicsDevice gd;
+    public Dimension screenSize = new Dimension(0,0);
     public void addGame(Main Game){
         game = Game;
     }
     public Point getLocationOnScreen(){
         return frame.getLocationOnScreen();
+    }
+    public Dimension getScreenSize(){
+        return screenSize;
     }
     public void startGame(){
         if(game != null) {
@@ -40,7 +44,9 @@ public class Window extends Canvas{
         frame.setUndecorated(true);
         frame.requestFocusInWindow();
         frame.setFocusable(true);
-        frame.setSize((int)gdm.getDisplayMode().getWidth(), (int)gdm.getDisplayMode().getHeight()-40);
+        screenSize.width = (int)gdm.getDisplayMode().getWidth();
+        screenSize.height = (int)gdm.getDisplayMode().getHeight()-40;
+        frame.setSize((int) screenSize.getWidth(), (int) screenSize.getHeight());
         frame.setLocationRelativeTo(null);
 //        gdm.getScreen().setFullScreenWindow(frame);
         if(game != null) {

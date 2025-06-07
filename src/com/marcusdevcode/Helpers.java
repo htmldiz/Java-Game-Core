@@ -14,4 +14,11 @@ public class Helpers {
         returnPoint.y = (int) (y - frameLocation.getY());
         return returnPoint;
     }
+
+    public static Point getItemLocation(Point location) {
+        return getItemLocation(location.x, location.y);
+    }
+    public static Dimension getScreenSize() {
+        return Window.getInstance().getScreenSize();
+    }
 }

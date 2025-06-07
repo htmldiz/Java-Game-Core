@@ -12,31 +12,31 @@ import java.util.ArrayList;
 public class SubWindow implements ObjectResources, IGameState {
     private String Slocation;
     Main game;
-    Image background;
-    String label;
+    public Image background;
+    public String backgroundPath = "resources/images/Window04.png";
+    public String label;
     public Dimension size = new Dimension(0,0);
-    int width;
-    int height;
-    int labelSize = 12;
-    Point location = new Point();
-    ArrayList<GMenuItem>items  = new ArrayList<GMenuItem>();
+    public int labelSize = 12;
+    public Point location = new Point();
+    ArrayList<GMenuButton>items  = new ArrayList<GMenuButton>();
     private Font labelFontText;
 
-    public SubWindow(Main game, int x, int y) {
+    public SubWindow(String label,Main game, int x, int y) {
         this.game = game;
         this.location.x = x;
         this.location.y = y;
     }
     public SubWindow(String label,Main game, String location) {
         this.label = label;
-        this.game = game;
+        this.game  = game;
         this.Slocation = location;
     }
 
     public void Initlocation(String location) {
         if("center".equals(location)) {
-            this.location.x = size.width/2;
-            this.location.y = size.height/2;
+            Dimension screenSize = Helpers.getScreenSize();
+            this.location.x = (int)screenSize.getWidth()/2 - size.width/2;
+            this.location.y = (int)screenSize.getHeight()/2 - size.height/2;
         }
     }
     @Override
@@ -75,15 +75,16 @@ public class SubWindow implements ObjectResources, IGameState {
             items.get(i).register_events();
         }
     }
-    public void addButton(GMenuItem Item) {
+    public void addButton(GMenuButton Item) {
         this.items.add(Item);
+        Item.loadResources();
         Point ItemLocation = Item.location.getLocation();
         Item.location = new Point(this.location.x + ItemLocation.x,this.location.y + ItemLocation.y);
     }
 
     @Override
     public void loadResources() {
-        background = ResourceLoader.getInstance().getBufferedImage("resources/images/Window04.png");
+        background      = ResourceLoader.getInstance().getBufferedImage(backgroundPath);
         size.width      = background.getWidth(null);
         size.height     = background.getHeight(null);
         Font customFont = ResourceLoader.getInstance().getFont("resources/fonts/cyberpunk.otf",Font.TRUETYPE_FONT);

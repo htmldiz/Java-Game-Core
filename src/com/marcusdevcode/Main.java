@@ -20,12 +20,12 @@ public class Main extends Canvas implements Runnable{
     private ArrayList<StateLoader> StateStack = new ArrayList<StateLoader>();
     private MouseEventHandlers mouseEventHandler;
     public Main(){
+        TinySound.init();
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         gd     = ge.getDefaultScreenDevice();
         Dimension ScreenSize = Toolkit.getDefaultToolkit().getScreenSize();
         width  = ScreenSize.getWidth();
         height = ScreenSize.getHeight();
-        Toolkit.getDefaultToolkit().getScreenResolution();
         window = Window.getInstance();
         window.addGame(this);
         window.createFrame();
@@ -34,11 +34,7 @@ public class Main extends Canvas implements Runnable{
         addKeyListener(new KeyAdapter() {
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                    if(currentStateID != GameState.MAIN_MENU) {
-                        change_state(GameState.MAIN_MENU);
-                    }else{
-                        closeGame();
-                    }
+                    change_state(GameState.MAIN_MENU);
                 }
             }
         });

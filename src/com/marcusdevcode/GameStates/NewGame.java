@@ -2,7 +2,7 @@ package src.com.marcusdevcode.GameStates;
 
 import src.com.marcusdevcode.IGameState;
 import src.com.marcusdevcode.Main;
-import src.com.marcusdevcode.UI.GMenuItem;
+import src.com.marcusdevcode.UI.GMenuButton;
 import src.com.marcusdevcode.UI.SubWindow;
 import src.com.marcusdevcode.resources.ResourceLoader;
 
@@ -14,7 +14,7 @@ public class NewGame extends Canvas implements IGameState {
     private Main game;
     Image background;
     Point location = new Point();
-    private final ArrayList<GMenuItem> menuItems = new ArrayList<GMenuItem>();
+    private final ArrayList<GMenuButton> menuItems = new ArrayList<GMenuButton>();
     public int width;
     public int height;
     public NewGame(Main Game){

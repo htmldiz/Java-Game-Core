@@ -5,9 +5,7 @@ import src.com.marcusdevcode.eventListeners.GameListener;
 import java.awt.event.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public class MouseEventHandlers extends MouseAdapter implements MouseListener, MouseWheelListener, MouseMotionListener {
     HashMap<String, GameListener> GameObjects = new HashMap<String, GameListener>();
@@ -25,21 +23,20 @@ public class MouseEventHandlers extends MouseAdapter implements MouseListener, M
         useEventCaller(e,"mouseClicked");
     }
     public void useEventCaller(MouseEvent e,String eventName) {
-        Set<String> keys = GameObjects.keySet();
-        if (!keys.isEmpty()) {
-            for (String key : keys) {
-                GameListener GameObject = GameObjects.get(key);
-                if(GameObject != null){
-                    boolean inBoundsOfMouse = GameObject.inBoundsOfMouse(e);
-                    if (inBoundsOfMouse) {
-                        try {
-                            Method eventMethod = GameObject.getClass().getMethod(eventName, e.getClass());
-                            eventMethod.invoke(GameObject, e);
-                        } catch (InvocationTargetException | IllegalAccessException ex) {
-                            throw new RuntimeException(ex);
-                        } catch (NoSuchMethodException ex) {
-    //                        throw new RuntimeException(ex);
-                        }
+        Iterator<Map.Entry<String, GameListener>> keys = GameObjects.entrySet().iterator();
+        while (keys.hasNext()) {
+            Map.Entry<String, GameListener> entry = keys.next();
+            GameListener GameObject               = entry.getValue();
+            if(GameObject != null){
+                boolean inBoundsOfMouse = GameObject.inBoundsOfMouse(e);
+                if (inBoundsOfMouse) {
+                    try {
+                        Method eventMethod = GameObject.getClass().getMethod(eventName, e.getClass());
+                        eventMethod.invoke(GameObject, e);
+                    } catch (InvocationTargetException | IllegalAccessException ex) {
+                        throw new RuntimeException(ex);
+                    } catch (NoSuchMethodException ex) {
+//                        throw new RuntimeException(ex);
                     }
                 }
             }
@@ -51,7 +48,13 @@ public class MouseEventHandlers extends MouseAdapter implements MouseListener, M
         return integer;
     }
     public void removeGameObject(String integer) {
-        GameObjects.remove(integer);
+        Iterator<Map.Entry<String, GameListener>> it = GameObjects.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<String, GameListener> entry = it.next();
+            if (entry.getKey().equals(integer)) {
+                it.remove();
+            }
+        }
     }
     public HashMap<String, GameListener> getGameObjects() {
         return GameObjects;
